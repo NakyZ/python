@@ -1,0 +1,2 @@
+x = "nakyZ"
+print(x)
