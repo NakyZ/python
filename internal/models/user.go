@@ -5,27 +5,47 @@ import "gorm.io/gorm"
 type User struct{
 	gorm.Model
 
-	Admin bool 
-	Usename string `gorm:"type:varchar(50)"`
-	Password string `gorm:"type:varchar(50)"`
-	Nama string `gorm:"type:varchar(50)"`
+	IsAdmin bool
+	Username 	string 		`gorm:"type:varchar(50)"`
+	Password 	string 		`gorm:"type:varchar(50)"`
+	Nama 		string 		`gorm:"type:varchar(50)"`
+	// Barangs    	[]Barang    	`gorm:"foreignKey:CreatedBy"`
+	// Transaksis 	[]Transaksi 	`gorm:"foreignKey:IdUser"`
+	// Customers  	[]Customer  	`gorm:"foreignKey:CreatedBy"`
 }
 
 type UserModel struct{
 	db *gorm.DB
 }
 
-func NewUserModel(connection *gorm.DB) *UserModel {
+func NewUserModel(connection *gorm.DB)*UserModel  {
 	return &UserModel{
 		db: connection,
 	}
-}	
+}
 
 func (um *UserModel) Login(username string, password string) (User, error) {
 	var result User
-	err := um.db.Where("username = ? and password = ?", username, password).First(&result).Error
-	if err != nil{
+	err := um.db.Where("username = ? AND password = ?", username, password).First(&result).Error
+	if err != nil {
 		return User{}, err
 	}
-	return result, nil 
+	return result, nil
+}
+
+func (um *UserModel) Register(newUser User) (bool, error) {
+	err := um.db.Create(&newUser).Error
+	if err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+func (um *UserModel) GetUser() ([]User, error) {
+	var result []User
+	err := um.db.Find(&result).Error
+	if err != nil {
+		return []User{}, err
+	}
+	return result, nil
 }

@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"fmt"
@@ -18,10 +18,10 @@ type setting struct{
 	DBNAME string
 }
 
-func importsettings()setting  {
+func importSettng()setting  {
 	var result setting
 	err := godotenv.Load(".env")
-	if err != nil {
+	if err != nil{
 		return setting{}
 	}
 	result.Host = os.Getenv("poshost")
@@ -29,18 +29,18 @@ func importsettings()setting  {
 	result.Password = os.Getenv("pospw")
 	result.Port = os.Getenv("posport")
 	result.DBNAME = os.Getenv("dbname")
-	return result
+	return	result
 }
-// user=postgres.jratzfdofxgfgondhztd password=xbA5JfgxsajXDdPf host=aws-0-ap-southeast-1.pooler.supabase.com port=5432 dbname=postgres
-func connectDB(s setting) ( *gorm.DB, error) {
-	var connstr = fmt.Sprintf("host=%s user=%s password=%s port=%s DBNAME=%s", s.Host, s.User, s.Password, s.Port, s.DBNAME)
-	db, err := gorm.Open(postgres.Open(connstr), &gorm.Config{
+
+func ConnectDB(s setting) (*gorm.DB, error)  {
+	var connStr = fmt.Sprintf("host=%s user=%s password=%s dbname=%s", s.Host, s.User, s.Password, s.Port, s.DBNAME)
+	db, err := gorm.Open(postgres.Open(connStr), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix: "contoh",
+			TablePrefix: "NakyArthaKencana",
 		},
 	})
 	if err != nil{
-		return nil,err
+		return nil, err
 	}
 	return db, nil
 }

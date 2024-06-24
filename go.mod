@@ -1,4 +1,4 @@
-module prjb
+module NAKY
 
 go 1.22.3
 
